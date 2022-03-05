@@ -67,7 +67,7 @@ class WatchStreamer extends Command {
         ctx.message.reply(this.usage)
     }
 
-    onError(ctx: CommandContext, err: Error) {
+    onError(_ctx: CommandContext, err: Error) {
         console.error(err)
     }
 
