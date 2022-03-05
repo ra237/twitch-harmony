@@ -1,5 +1,6 @@
 ![banner](https://user-images.githubusercontent.com/60703435/156765619-d764e19c-fd92-4117-8403-0dacd96cd638.png)
-![workflow_codeql](https://github.com/github/docs/actions/workflows/codeql.yml/badge.svg)  
+![workflow_codeql](https://github.com/ra237/twitch-harmony/actions/workflows/codeql.yml/badge.svg)
+![workflow_deno](https://github.com/ra237/twitch-harmony/actions/workflows/deno.yml/badge.svg)  
 **THE Twitch Extension for your Deno-based [Harmony](https://deno.land/x/harmony) Discord Bot**  
 * Notifies you if your favorite streamers go live
 ## Usage
