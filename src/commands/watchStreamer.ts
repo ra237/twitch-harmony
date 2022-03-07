@@ -44,7 +44,8 @@ export class WatchStreamer extends Command {
                     role = await this.createRoleAndAddUser(ctx, streamerName)
                 }
                 const guildId = this.getGuildId(ctx)
-                this.addToCache(guildId, streamerName, role?.id)
+                const roleId = this.getRoleId(role)
+                this.addToCache(guildId, streamerName, roleId)
                 ctx.message.reply("<@&" + this.cache[guildId][streamerName] + ">")
                 console.log(this.cache)
                 ctx.message.reply("Streamer found! is_live: " + channel.is_live)
@@ -54,11 +55,11 @@ export class WatchStreamer extends Command {
         ctx.message.reply("Streamer not found!")
     }
 
-    private addToCache(guildId: string, streamerName: string, roleId: string | undefined): void {
+    private addToCache(guildId: string, streamerName: string, roleId: string): void {
         if(!this.isGuildCached(guildId)) {
             this.cache[guildId] = {}
         }
-        if(!this.checkStreamerCached(guildId, streamerName) && typeof roleId === 'string') {
+        if(!this.checkStreamerCached(guildId, streamerName)) {
             this.cache[guildId][streamerName] = roleId
         }
     }
@@ -84,6 +85,13 @@ export class WatchStreamer extends Command {
         return ctx.guild?.id
     }
 
+    private getRoleId(role: Role | undefined): string {
+        if(typeof role === 'undefined') {
+            throw new TypeError("role cannot be undefined.")
+        }
+        return role.id
+    }
+
     private createRoleAndAddUser(ctx: CommandContext, streamerName: string): Promise<Role | undefined> {
         return new Promise(res => {
             res(
@@ -97,7 +105,6 @@ export class WatchStreamer extends Command {
     }
 
     private roleExists(ctx: CommandContext, roleName: string): Promise<Role | undefined> {
-        console.log(ctx.guild?.id)
         return new Promise(res => {
             res(
                 ctx.guild?.roles.fetchAll()
