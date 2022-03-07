@@ -13,7 +13,7 @@ export class WatchStreamer extends Command {
     description = "Adds a streamer (when needed) to watch list."
     contentArg: ContentArgument = { name: "streamer_name", match: "content" }
     args = [ this.contentArg ]
-    cache: Record<string, Record<string, string>> = {}  // Record<string, Set<string>> 
+    cache: Record<string, Record<string, string>> = {}
     
     // method called when no content argument is given
     onMissingArgs(ctx: CommandContext): void {
@@ -25,19 +25,16 @@ export class WatchStreamer extends Command {
     }
 
     async execute(ctx: CommandContext): Promise<void> {
-        // cache needs to be nested into guilds (maybe?)
         const SEARCH_CHANNEL_URI = "search/channels?query="
         const headers = { headers: { "Authorization": "Bearer " + TWITCH_AUTH_TOKEN, "Client-Id": TWITCH_CLIENT_ID } }
         const arg_streamer: string = ctx.rawArgs[0]
 
-        // TODO check cache before
         const req = await soxa.get(API_BASE_URL + SEARCH_CHANNEL_URI + arg_streamer + "&first=100", headers)
         const data: TwitchChannel[] = req.data.data
         this.watchStreamer(ctx, data, arg_streamer)
     }
 
     private async watchStreamer(ctx: CommandContext, reqData: TwitchChannel[], streamerName: string): Promise<void> {
-        // TODO check cache before
         for(const channel of reqData) {
             if(channel.display_name.toLowerCase() === streamerName.toLowerCase()) {
                 let role = await this.roleExists(ctx, streamerName)
@@ -107,11 +104,9 @@ export class WatchStreamer extends Command {
                 .then(roles => { 
                     for(const role of roles) {
                         if(role.name === roleName) {
-                            console.log("role found")
                             return role
                         }
                     }
-                    console.log("role not found")
                     return undefined
                 })
             )
