@@ -28,10 +28,16 @@ export class WatchStreamer extends Command {
         const SEARCH_CHANNEL_URI = "search/channels?query="
         const headers = { headers: { "Authorization": "Bearer " + TWITCH_AUTH_TOKEN, "Client-Id": TWITCH_CLIENT_ID } }
         const arg_streamer: string = ctx.rawArgs[0]
+        const guildId = this.getGuildId(ctx)
+        const streamerCached = this.checkStreamerCached(guildId, arg_streamer)
 
-        const req = await soxa.get(API_BASE_URL + SEARCH_CHANNEL_URI + arg_streamer + "&first=100", headers)
-        const data: TwitchChannel[] = req.data.data
-        this.watchStreamer(ctx, data, arg_streamer)
+        if(!streamerCached) {
+            const req = await soxa.get(API_BASE_URL + SEARCH_CHANNEL_URI + arg_streamer + "&first=100", headers)
+            const data: TwitchChannel[] = req.data.data
+            this.watchStreamer(ctx, data, arg_streamer)
+        } else {
+            this.watchStreamerCached(ctx, arg_streamer)
+        }
     }
 
     private async watchStreamer(ctx: CommandContext, reqData: TwitchChannel[], streamerName: string): Promise<void> {
@@ -55,6 +61,17 @@ export class WatchStreamer extends Command {
         ctx.message.reply("Streamer not found!")
     }
 
+    private async watchStreamerCached(ctx: CommandContext, streamerName: string): Promise<void> {
+        const role = await this.roleExists(ctx, streamerName)
+        if(role) {
+            role.addTo(ctx.message.author)
+        } else {
+            throw new Error(`Faulty cache. Role with name ${streamerName} does not exist.`)
+        }
+        console.log(this.cache)
+        ctx.message.reply("Streamer cached!")
+    }
+
     private addToCache(guildId: string, streamerName: string, roleId: string): void {
         if(!this.isGuildCached(guildId)) {
             this.cache[guildId] = {}
@@ -65,7 +82,7 @@ export class WatchStreamer extends Command {
     }
 
     private checkStreamerCached(guildId: string, streamerName: string): boolean {
-        if(streamerName in this.cache[guildId]) {
+        if(this.cache[guildId] && streamerName in this.cache[guildId]) {
             return true
         }
         return false
