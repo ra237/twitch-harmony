@@ -13,7 +13,7 @@ export class WatchStreamer extends Command {
     description = "Adds a streamer (when needed) to watch list."
     contentArg: ContentArgument = { name: "streamer_name", match: "content" }
     args = [ this.contentArg ]
-    cache: Record<string, string> = {}  // Record<string, Set<string>> 
+    cache: Record<string, Record<string, string>> = {}  // Record<string, Set<string>> 
     
     // method called when no content argument is given
     onMissingArgs(ctx: CommandContext): void {
@@ -46,8 +46,9 @@ export class WatchStreamer extends Command {
                 } else {
                     role = await this.createRoleAndAddUser(ctx, streamerName)
                 }
-                this.addToCache(streamerName, role?.id)
-                ctx.message.reply("<@&" + this.cache[streamerName] + ">")
+                const guildId = this.getGuildId(ctx)
+                this.addToCache(guildId, streamerName, role?.id)
+                ctx.message.reply("<@&" + this.cache[guildId][streamerName] + ">")
                 console.log(this.cache)
                 ctx.message.reply("Streamer found! is_live: " + channel.is_live)
                 return
@@ -56,17 +57,34 @@ export class WatchStreamer extends Command {
         ctx.message.reply("Streamer not found!")
     }
 
-    private addToCache(streamerName: string, roleId: string | undefined): void {
-        if(!this.checkStreamerCached(streamerName) && typeof roleId === 'string') {
-            this.cache[streamerName]= roleId
+    private addToCache(guildId: string, streamerName: string, roleId: string | undefined): void {
+        if(!this.isGuildCached(guildId)) {
+            this.cache[guildId] = {}
+        }
+        if(!this.checkStreamerCached(guildId, streamerName) && typeof roleId === 'string') {
+            this.cache[guildId][streamerName] = roleId
         }
     }
 
-    private checkStreamerCached(streamerName: string): boolean {
-        if(streamerName in this.cache) {
+    private checkStreamerCached(guildId: string, streamerName: string): boolean {
+        if(streamerName in this.cache[guildId]) {
             return true
         }
         return false
+    }
+
+    private isGuildCached(guildId: string) {
+        if(guildId in this.cache) {
+            return true
+        }
+        return false
+    }
+
+    private getGuildId(ctx: CommandContext): string {
+        if(typeof ctx.guild?.id === 'undefined') {
+            throw new TypeError("guildId cannot be undefined.")
+        }
+        return ctx.guild?.id
     }
 
     private createRoleAndAddUser(ctx: CommandContext, streamerName: string): Promise<Role | undefined> {
@@ -82,6 +100,7 @@ export class WatchStreamer extends Command {
     }
 
     private roleExists(ctx: CommandContext, roleName: string): Promise<Role | undefined> {
+        console.log(ctx.guild?.id)
         return new Promise(res => {
             res(
                 ctx.guild?.roles.fetchAll()
