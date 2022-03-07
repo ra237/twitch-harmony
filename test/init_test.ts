@@ -1,4 +1,4 @@
-import { soxa } from "./deps.ts";
+import { soxa } from "../deps.ts";
 import { assert, assertEquals } from "https://deno.land/std@0.128.0/testing/asserts.ts"
 
 const TWITCH_CLIENT_ID = Deno.env.get("TWITCH_CLIENT_ID")
