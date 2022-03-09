@@ -1,7 +1,7 @@
 import { Role } from "../../deps.ts"
 import { CommandContext } from "https://deno.land/x/harmony@v2.5.1/mod.ts"
 
-function throwIfStringUndefined(arg: string | undefined): string {
+export function throwIfStringUndefined(arg: string | undefined): string {
     if(typeof arg === 'undefined') {
         const argName: string = Object.keys({arg})[0]
         throw new TypeError(`${argName} cannot be undefined.`)
