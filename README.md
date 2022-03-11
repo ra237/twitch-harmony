@@ -33,5 +33,5 @@ client.connect('mysecrettoken123', Intents.GuildMembers)
 ## Testing
 Tests are provided, so you are more than welcome to test this module with your own Twitch Credentials by running:  
 ```
-deno run --allow-read --alow-env --alow-net mod.ts
+deno test -A --unstable
 ```
