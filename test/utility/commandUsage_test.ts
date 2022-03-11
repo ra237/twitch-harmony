@@ -6,6 +6,6 @@ Deno.test("generateUsageSubCommands", () => {
     const subCommands_empty: any = []
     assertEquals(generateUsageSubCommands(subCommands_empty), "")
 
-    const subCommands: any = ["Pog", "YEP", "NOP"]
-    assertEquals(generateUsageSubCommands(subCommands), "[Pog|YEP|NOP]")
+    const subCommands: any = [{name:"Pog"}, {name:"YEP"}, {name:"NOP"}]
+    assertEquals(generateUsageSubCommands(subCommands), "[pog|yep|nop]")
 });
