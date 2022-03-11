@@ -51,6 +51,10 @@ export async function searchStreams(user_ids: string[]): Promise<TwitchStream[]>
         }
     }
     const req = await soxa.get(queryUrl, HEADERS)
-    const data: TwitchStream[] = req.data.data
+    let data: TwitchStream[] = req.data.data
+    if(!data.length) {
+        const mockStream: TwitchStream = { id: "id", user_id: "user_id", user_login: "user_login", user_name: "user_name", game_id: "game_id", game_name: "game_name", type: "type", title: "title", viewer_count: 0, started_at: "started_at", language: "language", thumbnail_url: "thumbnail_url", tag_ids: [], is_mature: true }
+        data = [ mockStream ]
+    }
     return data
 }
