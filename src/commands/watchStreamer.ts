@@ -27,15 +27,15 @@ export class WatchStreamer extends Command {
         ctx.message.reply(this.usage)
     }
 
-    public execute(ctx: CommandContext): void {
+    public async execute(ctx: CommandContext): Promise<void> {
         const arg_streamer: string = ctx.rawArgs[0].toLowerCase()
         const guildId = getGuildId(ctx)
         const streamerCached = this.checkStreamerCached(guildId, arg_streamer)
 
         if(!streamerCached) {
-            this.watchStreamer(ctx, arg_streamer)
+            await this.watchStreamer(ctx, arg_streamer)
         } else {
-            this.watchStreamerCached(ctx, arg_streamer)
+            await this.watchStreamerCached(ctx, arg_streamer)
         }
     }
 
@@ -67,7 +67,7 @@ export class WatchStreamer extends Command {
         }
     }
 
-    private async isStreamerLive() {
+    private async isStreamerLive(): Promise<void> {
         for(const guildId of Object.keys(this.cache)) {
             const currentGuild = this.cache[guildId]
             const streamersToBeChecked: { name: string, id: string }[] = []
@@ -131,7 +131,7 @@ export class WatchStreamer extends Command {
         return false
     }
 
-    private isGuildCached(guildId: string) {
+    private isGuildCached(guildId: string): boolean {
         if(guildId in this.cache) {
             return true
         }
