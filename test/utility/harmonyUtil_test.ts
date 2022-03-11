@@ -1,5 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
-import { throwIfStringUndefined, getGuildId, getRoleId, createRoleAndAddUser, roleExists } from "../../src/utility/harmonyUtil.ts"
+import { throwIfStringUndefined, getGuildId, getRoleId, createRoleAndAddUser, roleExists, getAllGuilds, getAllChannelsOfGuild, findTextChannelOfGuild } from "../../src/utility/harmonyUtil.ts"
+import { Collection } from "https://deno.land/x/harmony@v2.5.1/mod.ts";
 import { assertEquals, assertThrows } from "https://deno.land/std@0.128.0/testing/asserts.ts"
 
 Deno.test("throwIfStringUndefined", () => {
@@ -63,4 +64,88 @@ Deno.test("roleExists", async () => {
     }
     const res = await roleExists(ctx, "xqcow")
     assertEquals(res?.name, "xqcow")
+});
+
+Deno.test("getAllGuilds", async () => {
+    const client: any = { guilds: { collection: function() { return [] } } }
+    const guilds = await getAllGuilds(client)
+    assertEquals(guilds, [])
+});
+
+Deno.test("getAllChannelsOfGuild", async () => {
+    const client: any = { guilds: 
+        { 
+            collection: function() { 
+                return Collection.fromObject({ "guild1": 
+                                                { channels: 
+                                                    { array: function() { return [] } } 
+                                                } 
+                                            }) 
+            }
+        } 
+    }
+    const channels = await getAllChannelsOfGuild(client, "guild1")
+    assertEquals(channels, [])
+});
+
+Deno.test("findTextChannelOfGuildValidChannel", async () => {
+    const channelPayload: any = {name: "channel1", isText: () => true}
+    const client: any = { guilds: 
+        { 
+            collection: function() { 
+                return Collection.fromObject({ "guild1": 
+                                                { channels: 
+                                                    { array: function() { return [channelPayload] } } 
+                                                } 
+                                            }) 
+            }
+        } 
+    }
+    const channel = await findTextChannelOfGuild(client, "guild1", "channel1")
+    assertEquals(channel, channelPayload)
+});
+
+Deno.test("findTextChannelOfGuildNotIsText", async () => {
+    const channelPayload: any = {name: "channel1", isText: () => false}
+    const client: any = { guilds: 
+        { 
+            collection: function() { 
+                return Collection.fromObject({ "guild1": 
+                                                { channels: 
+                                                    { array: function() { return [channelPayload] } } 
+                                                } 
+                                            }) 
+            }
+        } 
+    }
+    const channel = await findTextChannelOfGuild(client, "guild1", "channel1")
+    assertEquals(channel, undefined)
+});
+
+Deno.test("findTextChannelOfGuildInvalidChannel", async () => {
+    const client: any = { guilds: 
+        { 
+            collection: function() { 
+                return Collection.fromObject({ "guild1": 
+                                                { channels: 
+                                                    { array: function() { return [] } } 
+                                                } 
+                                            }) 
+            }
+        } 
+    }
+    const channel = await findTextChannelOfGuild(client, "guild1", "channel1")
+    assertEquals(channel, undefined)
+});
+
+Deno.test("findTextChannelOfGuildNoChannels", async () => {
+    const client: any = { guilds: 
+        { 
+            collection: function() { 
+                return Collection.fromObject({})
+            }
+        } 
+    }
+    const channel = await findTextChannelOfGuild(client, "guild1", "channel1")
+    assertEquals(channel, undefined)
 });
