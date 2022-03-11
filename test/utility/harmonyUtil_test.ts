@@ -1,7 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import { throwIfStringUndefined, getGuildId, getRoleId, createRoleAndAddUser, roleExists, getAllGuilds, getAllChannelsOfGuild, findTextChannelOfGuild } from "../../src/utility/harmonyUtil.ts"
-import { Collection } from "https://deno.land/x/harmony@v2.5.1/mod.ts";
-import { assertEquals, assertThrows } from "https://deno.land/std@0.128.0/testing/asserts.ts"
+import { assertEquals, assertThrows, Collection } from "../deps.ts"
 
 Deno.test("throwIfStringUndefined", () => {
     assertThrows(() => throwIfStringUndefined(undefined), TypeError)

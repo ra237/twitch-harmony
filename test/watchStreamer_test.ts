@@ -1,8 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 import { WatchStreamer } from "../src/commands/watchStreamer.ts"
-import { assertEquals, assertThrows, assert } from "https://deno.land/std@0.128.0/testing/asserts.ts"
+import { assertEquals, assertThrows, assert, Collection } from "./deps.ts"
 import { getDateInSeconds } from "../src/utility/util.ts"
-import { Collection } from "https://deno.land/x/harmony@v2.5.1/mod.ts";
 
 const MOCK_CLIENT: any = {}
 

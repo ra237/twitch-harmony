@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import { buildUrl, searchChannel, searchStreams, API_BASE_URL, QUERIES } from "../../src/utility/twitchAPI.ts"
-import { assertEquals } from "https://deno.land/std@0.128.0/testing/asserts.ts"
+import { assertEquals } from "../deps.ts"
 
 Deno.test("buildUrl", () => {
     assertEquals(buildUrl(QUERIES.search.channel), API_BASE_URL + QUERIES.search.channel)
