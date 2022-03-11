@@ -8,7 +8,7 @@ export function generateUsageSubCommands(subCommands: Command[]): string {
     let generatedUsage = "["
     if(subCommands.length > 0) {
         subCommands.forEach((cmd: Command) => {
-            generatedUsage += cmd.toString() + "|"
+            generatedUsage += cmd.name.toLowerCase() + "|"
         })
         generatedUsage = generatedUsage.slice(0, -1)
         generatedUsage += "]"
