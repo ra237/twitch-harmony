@@ -4,7 +4,7 @@
 **THE Twitch Extension for your Deno-based [Harmony](https://deno.land/x/harmony) Discord Bot**  
 * Notifies you if your favorite streamers go live
 ## Usage
-In order to use this extension it is <ins>**crucial**</ins> to create a `.env` file in the root directory of your Harmony bot. Within that file you need to include your [*client id*](https://github.com/ra237/twitch-harmony/wiki/Client-ID) and [*auth token*](https://github.com/ra237/twitch-harmony/wiki/Auth-Token) you got from Twitch:
+In order to use this extension it is <ins>**crucial**</ins> to create a `.env` file in the **root** directory of your Harmony bot. Within that file you need to include your [*client id*](https://github.com/ra237/twitch-harmony/wiki/Client-ID) and [*auth token*](https://github.com/ra237/twitch-harmony/wiki/Auth-Token) you got from Twitch:
 ```  
 TWITCH_CLIENT_ID=
 TWITCH_AUTH_TOKEN=
@@ -28,4 +28,10 @@ client.on('ready', () => {
 })
 
 client.connect('mysecrettoken123', Intents.GuildMembers)
+```
+
+## Testing
+Tests are provided, so you are more than welcome to test this module with your own Twitch Credentials by running:  
+```
+deno run --allow-read --alow-env --alow-net mod.ts
 ```
