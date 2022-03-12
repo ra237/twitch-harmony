@@ -5,6 +5,11 @@ import { searchChannel, searchStreams } from "../utility/twitchAPI.ts"
 import { getDateInSeconds } from "../utility/util.ts"
 import type { WatchCache } from "../types/watchCache.ts"
 
+// time in seconds
+const CHECK_INTERVAL = 16
+const NEXT_CHECK_WHEN_LIVE = 60 * 5
+const NEXT_CHECK_WHEN_OFFLINE = 60 + 15
+
 export class WatchStreamer extends Command {
     name = "watch"
     guildOnly = true
@@ -15,7 +20,7 @@ export class WatchStreamer extends Command {
     cache: WatchCache = {}
     client: CommandClient
     // interval for each guild needed
-    interval = setInterval(() => this.isStreamerLive(), 10000)
+    interval = setInterval(() => this.isStreamerLive(), CHECK_INTERVAL * 1000)
 
     constructor(client: CommandClient) {
         super()
@@ -84,17 +89,17 @@ export class WatchStreamer extends Command {
             for(const streamer of streamersToBeChecked) {
                 if (!activeStreams.some(s => s.user_name.toLowerCase() === streamer.name)) {
                     currentGuild[streamer.name].is_live = false
-                    currentGuild[streamer.name].nextCheck = getDateInSeconds() + 15
+                    currentGuild[streamer.name].nextCheck = getDateInSeconds() + NEXT_CHECK_WHEN_OFFLINE
                 }
             }
 
             for(const stream of activeStreams) {
                 const streamerName = stream.user_name.toLowerCase()
                 const streamer = currentGuild[streamerName]
+                streamer.nextCheck = getDateInSeconds() + NEXT_CHECK_WHEN_LIVE
                 if(streamer.is_live) { break }
          
-                streamer.is_live = true
-                streamer.nextCheck = getDateInSeconds() + 15
+                streamer.is_live = true                
                 const roleToPing = streamer.roleId
 
                 const guildTextChannel = await findTextChannelOfGuild(this.client, guildId, "se-bot")
