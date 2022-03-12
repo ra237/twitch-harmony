@@ -8,9 +8,9 @@ import type { WatchCache } from "../types/watchCache.ts"
 export class WatchStreamer extends Command {
     name = "watch"
     guildOnly = true
-    usage = "**USAGE**: !twitch watch [STREAMER NAME]"
-    description = "Adds a streamer (when needed) to watch list."
-    contentArg: ContentArgument = { name: "streamer_name", match: "content" }
+    usage = "**USAGE**: !twitch watch [STREAMER_NAME]"
+    description = "- Adds a streamer to the watch list and notifies you when the stream is running.\n- You'll be added to a new Discord role which gets tagged once given streamer is online."
+    contentArg: ContentArgument = { name: "STREAMER_NAME", match: "content" }
     args = [ this.contentArg ]
     cache: WatchCache = {}
     client: CommandClient
