@@ -79,7 +79,7 @@ export class WatchStreamer extends Command {
                 }
             }
             const streamerIds = streamersToBeChecked.map(streamer => streamer.id)
-            const activeStreams = await searchStreams(streamerIds)
+            const activeStreams = await this.searchStreams(streamerIds)
 
             for(const streamer of streamersToBeChecked) {
                 if (!activeStreams.some(s => s.user_name.toLowerCase() === streamer.name)) {
@@ -104,6 +104,10 @@ export class WatchStreamer extends Command {
                 
             }
         }
+    }
+
+    private async searchStreams(streamerIds: string[]) {
+        return await searchStreams(streamerIds)
     }
 
     private addToCache(guildId: string, streamerName: string, streamerId: string, roleId: string): void {
