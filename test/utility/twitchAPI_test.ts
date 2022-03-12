@@ -28,5 +28,5 @@ Deno.test("streamsEmptyIds", async () => {
 
 Deno.test("streamsInvalidIds", async () => {
     const streams = await searchStreams(["1","2","3"])
-    assertEquals(streams[0].id, "id")
+    assertEquals(streams, [])
 });

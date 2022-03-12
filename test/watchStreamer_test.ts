@@ -165,10 +165,7 @@ Deno.test("executeStreamerCached", async () => {
 Deno.test("isStreamerLiveNotLive", async () => {
     const watchStreamer = newWatchStreamer()
     watchStreamer["addToCache"]("1", "_", "AYAYA","xyz")
-    watchStreamer["addToCache"]("1", "user_name", "AYAYA2","xyz2")
-    watchStreamer.cache["1"]["_"].nextCheck = 0
-    watchStreamer.cache["1"]["user_name"].nextCheck = 0
-    watchStreamer.cache["1"]["user_name"].is_live = true
+    watchStreamer.cache["1"]["_"].nextCheck = 0    
     await watchStreamer["isStreamerLive"]()
     assertEquals(watchStreamer.cache["1"]["_"].is_live, false)
     assert(watchStreamer.cache["1"]["_"].nextCheck > getDateInSeconds())
@@ -177,8 +174,10 @@ Deno.test("isStreamerLiveNotLive", async () => {
 Deno.test("isStreamerLiveIsLive", async () => {
     const watchStreamer = newWatchStreamer()
     watchStreamer["addToCache"]("1", "user_name", "AYAYA2","xyz2")
+    watchStreamer["addToCache"]("1", "livestreamer", "AYAYA2","xyz2")
     watchStreamer.cache["1"]["user_name"].nextCheck = 0
-    watchStreamer.cache["1"]["user_name"].is_live = false
+    watchStreamer.cache["1"]["livestreamer"].nextCheck = 0
+    watchStreamer.cache["1"]["livestreamer"].is_live = true
     let messageSent = false
     const channelPayload: any = { name: "se-bot", isText: () => true, send: () => messageSent = true }
     const client: any = { guilds: 
@@ -192,15 +191,8 @@ Deno.test("isStreamerLiveIsLive", async () => {
             }
         } 
     }
+    watchStreamer["searchStreams"] = (): any => { return [{ user_name: "user_name" },{ user_name: "livestreamer" }] }
     watchStreamer.client = client
     await watchStreamer["isStreamerLive"]()
     assertEquals(messageSent, true)
-});
-
-Deno.test("watchStreamerIntervalCallsIsStreamerLive", () => {
-    const watchStreamer = new WatchStreamer(MOCK_CLIENT)
-    clearInterval(watchStreamer.interval)
-    watchStreamer.interval = 99
-    assert(watchStreamer.interval = 99)
-    
 });
