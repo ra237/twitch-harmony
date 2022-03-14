@@ -35,3 +35,6 @@ Tests are provided, so you are more than welcome to test this module with your o
 ```
 deno test -A --unstable
 ```
+
+## How does it work?
+You can read through the [wiki page](https://github.com/ra237/twitch-harmony/wiki/How-does-it-work%3F) if you are interested in that.
