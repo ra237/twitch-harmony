@@ -6,9 +6,9 @@ import { generateUsageSubCommands } from "./src/utility/commandUsage.ts"
 
 export class TwitchExtension extends Extension {
     name = "Twitch"
-    constructor(client: CommandClient) {
+    constructor(client: CommandClient, notificationChannel: string) {
         super(client)
-        const tw = new Twitch(client)
+        const tw = new Twitch(client, notificationChannel)
         this.commands.add(tw)
         Twitch.allSubCommands = tw.getSubCommands()
         console.log(`\t+ ${this.name} Extension loaded.`)
@@ -23,10 +23,10 @@ export class Twitch extends Command {
     client: CommandClient
     static allSubCommands: Command[]
 
-    constructor(client: CommandClient) {
+    constructor(client: CommandClient, notificationChannel: string) {
         super()
         this.client = client
-        this.subCommands = [ new Help(), new WatchStreamer(client) ]
+        this.subCommands = [ new Help(), new WatchStreamer(client, notificationChannel) ]
     }
     
     // this class will only execute when no valid sub-command is given

@@ -19,12 +19,13 @@ export class WatchStreamer extends Command {
     args = [ this.contentArg ]
     cache: WatchCache = {}
     client: CommandClient
-    // interval for each guild needed
     interval = setInterval(() => this.isStreamerLive(), CHECK_INTERVAL * 1000)
+    notificationChannel: string
 
-    constructor(client: CommandClient) {
+    constructor(client: CommandClient, notificationChannel: string) {
         super()
         this.client = client
+        this.notificationChannel = notificationChannel
     }
 
     // method called when no content argument is given
@@ -102,7 +103,7 @@ export class WatchStreamer extends Command {
                 streamer.is_live = true                
                 const roleToPing = streamer.roleId
 
-                const guildTextChannel = await findTextChannelOfGuild(this.client, guildId, "se-bot")
+                const guildTextChannel = await findTextChannelOfGuild(this.client, guildId, this.notificationChannel)
                 if(typeof guildTextChannel !== 'undefined'){
                     guildTextChannel.send(`<@&${roleToPing}> is live! Go watch him on:\nhttps://twitch.tv/${stream.user_name}`)
                 }
