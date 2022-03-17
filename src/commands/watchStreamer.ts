@@ -22,7 +22,7 @@ export class WatchStreamer extends Command {
     interval = setInterval(() => this.isStreamerLive(), CHECK_INTERVAL * 1000)
     notificationChannel: string
 
-    constructor(client: CommandClient, notificationChannel: string) {
+    constructor(client: CommandClient, notificationChannel: string = "twitch") {
         super()
         this.client = client
         this.notificationChannel = notificationChannel

@@ -179,7 +179,7 @@ Deno.test("isStreamerLiveIsLive", async () => {
     watchStreamer.cache["1"]["livestreamer"].nextCheck = 0
     watchStreamer.cache["1"]["livestreamer"].is_live = true
     let messageSent = false
-    const channelPayload: any = { name: "se-bot", isText: () => true, send: () => messageSent = true }
+    const channelPayload: any = { name: "twitch", isText: () => true, send: () => messageSent = true }
     const client: any = { guilds: 
         { 
             collection: function() { 
