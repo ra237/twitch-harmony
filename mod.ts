@@ -6,7 +6,7 @@ import { generateUsageSubCommands } from "./src/utility/commandUsage.ts"
 
 export class TwitchExtension extends Extension {
     name = "Twitch"
-    constructor(client: CommandClient, notificationChannel: string = "twitch") {
+    constructor(client: CommandClient, notificationChannel?: string) {
         super(client)
         const tw = new Twitch(client, notificationChannel)
         this.commands.add(tw)
@@ -23,7 +23,7 @@ export class Twitch extends Command {
     client: CommandClient
     static allSubCommands: Command[]
 
-    constructor(client: CommandClient, notificationChannel: string = "twitch") {
+    constructor(client: CommandClient, notificationChannel?: string) {
         super()
         this.client = client
         this.subCommands = [ new Help(), new WatchStreamer(client, notificationChannel) ]
