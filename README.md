@@ -31,10 +31,7 @@ client.connect('mysecrettoken123', Intents.GuildMembers)
 ```
 
 ## Testing
-Tests are provided, so you are more than welcome to test this module with your own Twitch Credentials by running:  
-```
-deno test -A --unstable
-```
+Tests are automatically run on push or pull request to main by GitHub actions.
 
 ## How does it work?
 You can read through the [wiki page](https://github.com/ra237/twitch-harmony/wiki/How-does-it-work%3F) if you are interested in that.
