@@ -23,14 +23,25 @@ export class WatchStreamer extends Command {
     client: CommandClient
     notificationChannel: string
     intervalStarter: IntervalStarterInterface
-    private interval: number
+    interval: number
 
-    constructor(client: CommandClient, notificationChannel: string = "twitch", intervalStarter: IntervalStarterInterface) {
+    constructor(client: CommandClient, notificationChannel?: string, intervalStarter?: IntervalStarterInterface) {
         super()
         this.client = client
-        this.notificationChannel = notificationChannel
-        this.intervalStarter = intervalStarter
-        this.interval = this.intervalStarter.startInterval(CHECK_INTERVAL)
+
+        if(typeof notificationChannel !== "undefined") {
+            this.notificationChannel = notificationChannel
+        } else {
+            this.notificationChannel = "twitch"
+        }
+        
+        if(typeof intervalStarter !== "undefined") {
+            this.intervalStarter = intervalStarter
+        } else {
+            this.intervalStarter = new IntervalStarter()
+        }
+
+        this.interval = this.intervalStarter.startInterval(CHECK_INTERVAL, this)
     }
 
     // method called when no content argument is given
@@ -78,7 +89,7 @@ export class WatchStreamer extends Command {
         }
     }
 
-    private async setStreamerLive(): Promise<void> {
+    public async checkStreamerLive(): Promise<void> {
         for (const guildId of Object.keys(this.cache)) {
             const currentGuild = this.cache[guildId]
             const streamersToBeChecked: { name: string, id: string }[] = []
