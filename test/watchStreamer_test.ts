@@ -2,6 +2,7 @@
 import { WatchStreamer } from "../src/commands/watchStreamer.ts"
 import { assertEquals, assertThrows, assert, Collection } from "./deps.ts"
 import { getDateInSeconds } from "../src/utility/util.ts"
+import { IntervalStarterDouble } from "../src/utility/interval-starter-double.ts";
 
 const MOCK_CLIENT: any = {}
 
@@ -10,6 +11,19 @@ function newWatchStreamer(): WatchStreamer {
     clearInterval(watchStreamer.interval)
     return watchStreamer
 }
+
+Deno.test("watchStreamerNotificationChannel", () => {
+    const watchStreamer = new WatchStreamer(MOCK_CLIENT, "test")
+    clearInterval(watchStreamer.interval)
+    assertEquals(watchStreamer.notificationChannel, "test")
+});
+
+Deno.test("watchStreamerIntervalStarter", () => {
+    const watchStreamer = new WatchStreamer(MOCK_CLIENT, undefined, new IntervalStarterDouble())
+    assertEquals(watchStreamer.interval, -1)
+    clearInterval(watchStreamer.interval)
+});
+
 Deno.test("watchStreamerInvalidName", async () => {
     const watchStreamer = newWatchStreamer()
     let reply = ""
@@ -162,16 +176,16 @@ Deno.test("executeStreamerCached", async () => {
     assertEquals(messageAuthor, "epicDiscordUser")
 });
 
-Deno.test("isStreamerLiveNotLive", async () => {
+Deno.test("checkStreamerLiveNotLive", async () => {
     const watchStreamer = newWatchStreamer()
     watchStreamer["addToCache"]("1", "_", "AYAYA","xyz")
     watchStreamer.cache["1"]["_"].nextCheck = 0    
-    await watchStreamer["isStreamerLive"]()
+    await watchStreamer["checkStreamerLive"]()
     assertEquals(watchStreamer.cache["1"]["_"].is_live, false)
     assert(watchStreamer.cache["1"]["_"].nextCheck > getDateInSeconds())
 });
 
-Deno.test("isStreamerLiveIsLive", async () => {
+Deno.test("checkStreamerLiveIsLive", async () => {
     const watchStreamer = newWatchStreamer()
     watchStreamer["addToCache"]("1", "user_name", "AYAYA2","xyz2")
     watchStreamer["addToCache"]("1", "livestreamer", "AYAYA2","xyz2")
@@ -193,6 +207,6 @@ Deno.test("isStreamerLiveIsLive", async () => {
     }
     watchStreamer["searchStreams"] = (): any => { return [{ user_name: "user_name" },{ user_name: "livestreamer" }] }
     watchStreamer.client = client
-    await watchStreamer["isStreamerLive"]()
+    await watchStreamer["checkStreamerLive"]()
     assertEquals(messageSent, true)
 });
