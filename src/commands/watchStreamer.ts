@@ -31,8 +31,10 @@ export class WatchStreamer extends Command {
 
         if(typeof notificationChannel !== "undefined") {
             this.notificationChannel = notificationChannel
+            console.log(`[INFO] Using notification channel ${this.notificationChannel}.`)
         } else {
             this.notificationChannel = "twitch"
+            console.log(`[WARNING] NO NOTIFICATION CHANNEL GIVEN. USING CHANNEL ${this.notificationChannel}!`)
         }
         
         if(typeof intervalStarter !== "undefined") {

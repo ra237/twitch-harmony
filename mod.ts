@@ -11,7 +11,7 @@ export class TwitchExtension extends Extension {
         const tw = new Twitch(client, notificationChannel)
         this.commands.add(tw)
         Twitch.allSubCommands = tw.getSubCommands()
-        console.log(`\t+ ${this.name} Extension loaded.`)
+        console.log(`[INFO] ${this.name} Extension loaded.`)
     }
 }
 
