@@ -21,7 +21,7 @@ const client = new CommandClient({
 })
 
 // load the extension
-client.extensions.load(TwitchExtension)
+client.extensions.load(new TwitchExtension(client, "NOTIFICATION_CHANNEL"))
 
 client.on('ready', () => {
   console.log(`Ready! User: ${client.user?.tag}`)
@@ -29,8 +29,10 @@ client.on('ready', () => {
 
 client.connect('mysecrettoken123', Intents.GuildMembers)
 ```
+When loading the extensions you should instantiate the extension class with a second parameter, which is the **notification channel**. This channel is used by the bot to inform you, when a watched streamer goes live.
 
 ## Testing
+The code is **100%** covered!  
 Tests are automatically run on push or pull request to main by GitHub actions.
 
 ## How does it work?
