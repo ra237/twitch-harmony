@@ -10,7 +10,7 @@ TWITCH_CLIENT_ID=
 TWITCH_AUTH_TOKEN=
 BOT_TOKEN=
 ``` 
-Optionally you can provide your Discord `BOT_TOKEN`, so you can just copy & paste the example below.  
+Optionally you can provide your Discord `BOT_TOKEN`, so you can just copy & paste the example below (but **don't** forget to update `YOUR_CHANNEL` to your desired notification channel!).  
 The extension only requires permissions to manage roles, read & send messages. You can use the following permission code: *268438528*  
 
 ## Example
@@ -26,7 +26,7 @@ const client = new CommandClient({
 })
 
 // load the extension
-client.extensions.load(new TwitchExtension(client, "se-bot"))
+client.extensions.load(new TwitchExtension(client, "YOUR_CHANNEL"))
 
 client.on('ready', () => {
   console.log(`Ready! User: ${client.user?.tag}`)
