@@ -8,26 +8,31 @@ In order to use this extension it is <ins>**crucial**</ins> to create a `.env` f
 ```  
 TWITCH_CLIENT_ID=
 TWITCH_AUTH_TOKEN=
+BOT_TOKEN=
 ``` 
+Optionally you can provide your Discord `BOT_TOKEN`, so you can just copy & paste the example below.  
+The extension only requires permissions to manage roles, read & send messages. You can use the following permission code: *268438528*  
 
 ## Example
 A minimal example of using this extension:
 ```js
 import { CommandClient, Intents } from 'https://deno.land/x/harmony/mod.ts'
-import { TwitchExtension } from 'https://deno.land/x/twitch-harmony/mod.ts'
+import { TwitchExtension } from 'https://deno.land/x/twitch_harmony/mod.ts'
+
+const token = Deno.env.get("BOT_TOKEN")
 
 const client = new CommandClient({
   prefix: '!'
 })
 
 // load the extension
-client.extensions.load(new TwitchExtension(client, "NOTIFICATION_CHANNEL"))
+client.extensions.load(new TwitchExtension(client, "se-bot"))
 
 client.on('ready', () => {
   console.log(`Ready! User: ${client.user?.tag}`)
 })
 
-client.connect('mysecrettoken123', Intents.GuildMembers)
+client.connect(token, Intents.GuildMembers)
 ```
 When loading the extensions you should instantiate the extension class with a second parameter, which is the **notification channel**. This channel is used by the bot to inform you, when a watched streamer goes live.
 
